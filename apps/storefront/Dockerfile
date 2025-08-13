@@ -1,22 +1,25 @@
-# Sử dụng image bun chính thức, đã có sẵn mọi công cụ
-FROM oven/bun:1.0
-
-# Đặt thư mục làm việc
+# Stage 1: Base image with bun
+FROM oven/bun:1.0 AS base
 WORKDIR /app
 
-# Copy các file định nghĩa dependencies
+# Copy root package.json and lockfile
 COPY package.json bun.lockb ./
 
-# Cài đặt tất cả dependencies (bao gồm cả devDependencies để có prisma)
+# Install all dependencies
 RUN bun install --frozen-lockfile
 
-# Copy toàn bộ mã nguồn còn lại
+# Copy the rest of the monorepo
 COPY . .
 
-# Mở cổng 3000
-EXPOSE 3000
+# Copy the entrypoint script and make it executable
+COPY ./apps/storefront/entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# Lệnh khởi động sẽ được định nghĩa trong docker-compose.yml
+# Set the entrypoint
+ENTRYPOINT ["entrypoint.sh"]
+
+# Expose the port Next.js runs on
+EXPOSE 3000
 
 
 
