@@ -10,8 +10,11 @@ services:
       POSTGRES_DB: ecommerce
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   admin:
     build:
@@ -24,10 +27,17 @@ services:
       DATABASE_URL: "postgresql://postgres:password@db:5432/ecommerce"
       NEXT_PUBLIC_URL: "https://admin.shopdoan.shop"
       JWT_SECRET_KEY: "a-super-secret-key-for-admin-change-me"
-      NODE_ENV: "development"
+      NODE_ENV: "production"
+      # Các biến khác để trống nếu không dùng
       NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: ""
+      NEXT_PUBLIC_GOOGLE_OAUTH_ID: ""
+      GOOGLE_OAUTH_SECRET: ""
+      MAIL_SMTP_SERVICE: ""
+      MAIL_SMTP_PASS: ""
+      MAIL_SMTP_USER: ""
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   storefront:
     build:
@@ -39,9 +49,11 @@ services:
     environment:
       DATABASE_URL: "postgresql://postgres:password@db:5432/ecommerce"
       NEXT_PUBLIC_URL: "https://thanhlab.shopdoan.shop"
-      NODE_ENV: "development"
+      NODE_ENV: "production"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
 volumes:
   postgres_data:
+
