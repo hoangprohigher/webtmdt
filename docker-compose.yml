@@ -28,6 +28,7 @@ services:
       NEXT_PUBLIC_URL: "https://admin.shopdoan.shop"
       JWT_SECRET_KEY: "a-super-secret-key-for-admin-change-me"
       NODE_ENV: "production"
+      NODE_OPTIONS: "--max-old-space-size=4096"
       # Các biến khác để trống nếu không dùng
       NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: ""
       NEXT_PUBLIC_GOOGLE_OAUTH_ID: ""
@@ -51,6 +52,7 @@ services:
       NEXT_PUBLIC_URL: "https://shopdoan.shop"
       JWT_SECRET_KEY: "a-super-secret-key-for-storefront-change-me"
       NODE_ENV: "production"
+      NODE_OPTIONS: "--max-old-space-size=4096"
       # Các biến khác để trống nếu không dùng
       NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: ""
       NEXT_PUBLIC_GOOGLE_OAUTH_ID: ""
