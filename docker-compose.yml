@@ -38,9 +38,9 @@ services:
     command: >
       sh -c "
         echo 'Waiting for database to be ready...' &&
-        bun prisma generate &&
+        bunx prisma generate &&
         echo 'Database schema push...' &&
-        bun prisma db push &&
+        bunx prisma db push &&
         echo 'Building application...' &&
         bun run build &&
         echo 'Starting application...' &&
@@ -64,9 +64,9 @@ services:
     command: >
       sh -c "
         echo 'Waiting for database to be ready...' &&
-        bun prisma generate &&
+        bunx prisma generate &&
         echo 'Database schema push...' &&
-        bun prisma db push &&
+        bunx prisma db push &&
         echo 'Building application...' &&
         bun run build &&
         echo 'Starting application...' &&
