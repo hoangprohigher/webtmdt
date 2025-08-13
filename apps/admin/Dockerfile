@@ -1,23 +1,50 @@
-# Use an official Node.js runtime as the base image
-FROM node:16
+# Stage 1: Build the application
+FROM node:18-alpine AS builder
 
-# Set the working directory
-WORKDIR /usr/src/app
+# Set working directory
+WORKDIR /app
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
+# Install bun
+RUN npm install -g bun
 
 # Install dependencies
-RUN npm install
+COPY package.json bun.lockb ./
+RUN bun install --frozen-lockfile
 
 # Copy the rest of the application code
 COPY . .
 
-# Build the application (if applicable)
-# RUN npm run build
+# Generate Prisma client
+RUN bun prisma generate
 
-# Expose the application's port
+# Build the Next.js application
+RUN bun run build
+
+# Stage 2: Run the application
+FROM node:18-alpine AS runner
+
+# Set environment variables
+ENV NODE_ENV=production
+
+# Set working directory
+WORKDIR /app
+
+# Install bun
+RUN npm install -g bun
+
+# Install only production dependencies
+COPY package.json bun.lockb ./
+RUN bun install --frozen-lockfile --production
+
+# Copy built application from the builder stage
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/node_modules ./node_modules
+
+# Expose the port the app runs on
 EXPOSE 3000
 
-# Start the application
-CMD ["node", "app.js"]
+# Start the Next.js application
+CMD ["bun", "run", "start"]
+

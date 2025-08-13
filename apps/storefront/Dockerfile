@@ -4,6 +4,9 @@ FROM node:18-alpine AS builder
 # Set working directory
 WORKDIR /app
 
+# Install bun
+RUN npm install -g bun
+
 # Install dependencies
 COPY package.json bun.lockb ./
 RUN bun install --frozen-lockfile
@@ -26,6 +29,9 @@ ENV NODE_ENV=production
 # Set working directory
 WORKDIR /app
 
+# Install bun
+RUN npm install -g bun
+
 # Install only production dependencies
 COPY package.json bun.lockb ./
 RUN bun install --frozen-lockfile --production
@@ -41,3 +47,4 @@ EXPOSE 3000
 
 # Start the Next.js application
 CMD ["bun", "run", "start"]
+
