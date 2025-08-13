@@ -18,8 +18,8 @@ services:
 
   admin:
     build:
-      context: .
-      dockerfile: apps/admin/Dockerfile
+      context: ./apps/admin
+      dockerfile: Dockerfile
     restart: always
     ports:
       - "6000:3000"
@@ -52,8 +52,8 @@ services:
 
   storefront:
     build:
-      context: .
-      dockerfile: apps/storefront/Dockerfile
+      context: ./apps/storefront
+      dockerfile: Dockerfile
     restart: always
     ports:
       - "6001:3000"
