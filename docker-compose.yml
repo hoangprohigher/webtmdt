@@ -18,8 +18,8 @@ services:
 
   admin:
     build:
-      context: ./apps/admin
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: apps/admin/Dockerfile
     restart: always
     ports:
       - "6000:3000"
@@ -37,13 +37,14 @@ services:
       MAIL_SMTP_USER: ""
     command: >
       sh -c "
-        echo 'Waiting for database to be ready...' &&
+        cd apps/admin &&
+        echo 'Admin: Waiting for database...' &&
         bunx prisma generate &&
-        echo 'Database schema push...' &&
-        bunx prisma db push &&
-        echo 'Building application...' &&
+        echo 'Admin: Pushing database schema...' &&
+        bunx prisma db push --accept-data-loss &&
+        echo 'Admin: Building application...' &&
         bun run build &&
-        echo 'Starting application...' &&
+        echo 'Admin: Starting application...' &&
         bun run start
       "
     depends_on:
@@ -52,8 +53,8 @@ services:
 
   storefront:
     build:
-      context: ./apps/storefront
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: apps/storefront/Dockerfile
     restart: always
     ports:
       - "6001:3000"
@@ -63,13 +64,14 @@ services:
       NODE_ENV: "production"
     command: >
       sh -c "
-        echo 'Waiting for database to be ready...' &&
+        cd apps/storefront &&
+        echo 'Storefront: Waiting for database...' &&
         bunx prisma generate &&
-        echo 'Database schema push...' &&
-        bunx prisma db push &&
-        echo 'Building application...' &&
+        echo 'Storefront: Pushing database schema...' &&
+        bunx prisma db push --accept-data-loss &&
+        echo 'Storefront: Building application...' &&
         bun run build &&
-        echo 'Starting application...' &&
+        echo 'Storefront: Starting application...' &&
         bun run start
       "
     depends_on:
