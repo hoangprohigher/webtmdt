@@ -35,6 +35,17 @@ services:
       MAIL_SMTP_SERVICE: ""
       MAIL_SMTP_PASS: ""
       MAIL_SMTP_USER: ""
+    command: >
+      sh -c "
+        echo 'Waiting for database to be ready...' &&
+        bun prisma generate &&
+        echo 'Database schema push...' &&
+        bun prisma db push &&
+        echo 'Building application...' &&
+        bun run build &&
+        echo 'Starting application...' &&
+        bun run start
+      "
     depends_on:
       db:
         condition: service_healthy
@@ -50,6 +61,17 @@ services:
       DATABASE_URL: "postgresql://postgres:password@db:5432/ecommerce"
       NEXT_PUBLIC_URL: "https://thanhlab.shopdoan.shop"
       NODE_ENV: "production"
+    command: >
+      sh -c "
+        echo 'Waiting for database to be ready...' &&
+        bun prisma generate &&
+        echo 'Database schema push...' &&
+        bun prisma db push &&
+        echo 'Building application...' &&
+        bun run build &&
+        echo 'Starting application...' &&
+        bun run start
+      "
     depends_on:
       db:
         condition: service_healthy
